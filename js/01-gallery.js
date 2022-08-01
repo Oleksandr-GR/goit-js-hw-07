@@ -15,18 +15,29 @@ function createGallery(items) {
     </div> `).join('');
 }
 
-const gallery = createGallery(galleryItems);
+const gallery = createGallery(galleryItems); 
 galleryContainer.innerHTML = gallery;
+
+const instance = basicLightbox.create(`<img src="" width="800" height="600" >`, {
+    onShow: (instance) => {
+        document.addEventListener('keydown', onEscClickEvent)
+    },
+    onClose: (instance) => {
+        document.removeEventListener('keydown', onEscClickEvent)
+    }
+});
 
 function onClickEvent(event) {
     
     if (event.target.nodeName !== "IMG") { return };
     
     event.preventDefault();
-    const instance = basicLightbox.create(`<img src="${event.target.dataset.sourse}" width="800" height="600" >`);
+    instance.element().querySelector('img').src = event.target.dataset.sourse;
     instance.show();
 
-    document.addEventListener('keydown', (event) => {
-        if (event.code === 'Escape') { instance.close() }
-    })
+}
+
+function onEscClickEvent(event) {
+    if (event.code === 'Escape') { instance.close() };
+    return;
 }
